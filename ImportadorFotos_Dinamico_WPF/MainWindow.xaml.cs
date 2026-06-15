@@ -110,18 +110,25 @@ namespace ImportadorFotos_Dinamico_WPF
 
             //string s = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-            var ensamblado = typeof(MainWindow).Assembly;
-            var fvi = FileVersionInfo.GetVersionInfo(ensamblado.Location);
-                        
-            if (DateTime.Now.Year > 2020)
-            {
-                LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-" + DateTime.Now.Year.ToString();
-            }
-            else
-            {
-                LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-2026";
-            }
-            LabelCopyR.Text = LabelCopyR.Text + $" - v{fvi.ProductMajorPart}.{fvi.ProductMinorPart}.{fvi.ProductPrivatePart}";
+            //var ensamblado = typeof(MainWindow).Assembly;
+            //var fvi = FileVersionInfo.GetVersionInfo(ensamblado.Location);
+
+            //if (DateTime.Now.Year > 2020)
+            //{
+            //    LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-" + DateTime.Now.Year.ToString();
+            //}
+            //else
+            //{
+            //    LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-2026";
+            //}
+            //LabelCopyR.Text = LabelCopyR.Text + $" - v{fvi.ProductMajorPart}.{fvi.ProductMinorPart}.{fvi.ProductPrivatePart}";
+
+            // Leemos la versión de 4 dígitos directamente de la memoria del ensamblado
+            var version = typeof(MainWindow).Assembly.GetName().Version;
+            string strVersion = version != null ? $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}" : "3.0.0.0";
+
+            string textoCopyright = $"| © Guillermo (elGuille) Som, 2018-{DateTime.Now.Year}";
+            LabelCopyR.Text = $"{textoCopyright} - v{strVersion}";
 
             // Inicializamos la cabecera del ListView según el CheckBox
             ActualizarCabeceraFecha();

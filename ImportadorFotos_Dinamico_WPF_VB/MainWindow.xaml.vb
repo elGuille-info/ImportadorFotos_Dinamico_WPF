@@ -82,8 +82,21 @@ Public Class MainWindow
         End If
 
         ActualizarCabeceraFecha()
-        LabelInfo.Text = "© Guillermo (elGuille) Som, 2018-" & Date.Now.Year.ToString() & " - v3.0"
-        LabelCopyR.Text = LabelInfo.Text
+
+        'LabelInfo.Text = "© Guillermo (elGuille) Som, 2018-" & Date.Now.Year.ToString() & " - v3.0"
+        'LabelCopyR.Text = LabelInfo.Text
+
+        ' Leemos la versión de 4 dígitos directamente de la memoria del ensamblado en VB
+        Dim version As Version = GetType(MainWindow).Assembly.GetName().Version
+        Dim strVersion As String = "3.0.0.0"
+
+        If version IsNot Nothing Then
+            strVersion = $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}"
+        End If
+
+        Dim textoCopyright As String = $"| © Guillermo (elGuille) Som, 2018-{Date.Now.Year}"
+        LabelCopyR.Text = $"{textoCopyright} - v{strVersion}"
+
         LabelInfo.Text = "Aplicación lista. Perfiles cargados con éxito."
     End Sub
 
