@@ -63,7 +63,7 @@ namespace ImportadorFotos_Dinamico_WPF
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            LabelInfo.Content = "Cargando configuración JSON...";
+            LabelInfo.Text = "Cargando configuración JSON...";
 
             // Cargamos los datos de forma asíncrona desde el archivo config.json
             _config = await GestorConfiguracion.CargarAsync();
@@ -115,17 +115,17 @@ namespace ImportadorFotos_Dinamico_WPF
                         
             if (DateTime.Now.Year > 2020)
             {
-                LabelCopyR.Content = "| © Guillermo (elGuille) Som, 2018-" + DateTime.Now.Year.ToString();
+                LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-" + DateTime.Now.Year.ToString();
             }
             else
             {
-                LabelCopyR.Content = "| © Guillermo (elGuille) Som, 2018-2026";
+                LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-2026";
             }
-            LabelCopyR.Content = LabelCopyR.Content.ToString() + $" - v{fvi.ProductMajorPart}.{fvi.ProductMinorPart}.{fvi.ProductPrivatePart}";
+            LabelCopyR.Text = LabelCopyR.Text + $" - v{fvi.ProductMajorPart}.{fvi.ProductMinorPart}.{fvi.ProductPrivatePart}";
 
             // Inicializamos la cabecera del ListView según el CheckBox
             ActualizarCabeceraFecha();
-            LabelInfo.Content = "Aplicación lista. Perfiles cargados con éxito.";
+            LabelInfo.Text = "Aplicación lista. Perfiles cargados con éxito.";
         }
 
         private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -177,7 +177,7 @@ namespace ImportadorFotos_Dinamico_WPF
         //    ChkUsarSesion.IsChecked = perfilActivo.UsarSesion;
 
         //    LvFicheros.Items.Clear();
-        //    LabelInfo.Content = $"Perfil '{perfilActivo.Id}' cargado.";
+        //    LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado.";
         //}
 
         //private void CmbPerfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -204,7 +204,7 @@ namespace ImportadorFotos_Dinamico_WPF
         //    ChkUsarSesion.IsChecked = perfilActivo.UsarSesion;
 
         //    LvFicheros.Items.Clear();
-        //    LabelInfo.Content = $"Perfil '{perfilActivo.Id}' cargado.";
+        //    LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado.";
         //}
 
         private void CmbPerfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -237,7 +237,7 @@ namespace ImportadorFotos_Dinamico_WPF
             ChkUsarSesion.IsChecked = perfilActivo.UsarSesion;
 
             LvFicheros.Items.Clear();
-            LabelInfo.Content = $"Perfil '{perfilActivo.Id}' cargado.";
+            LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado.";
         }
 
         private void SincronizarPerfilActivo()
@@ -280,7 +280,7 @@ namespace ImportadorFotos_Dinamico_WPF
 
             ActualizarComboPerfiles();
             CmbPerfiles.SelectedItem = nuevo;
-            LabelInfo.Content = $"Perfil '{nombre}' creado.";
+            LabelInfo.Text = $"Perfil '{nombre}' creado.";
         }
 
         private void BtnEliminarPerfil_Click(object sender, RoutedEventArgs e)
@@ -301,7 +301,7 @@ namespace ImportadorFotos_Dinamico_WPF
                 if (CmbPerfiles.Items.Count > 0) CmbPerfiles.SelectedIndex = 0;
                 else LimpiarControlesPerfil();
 
-                LabelInfo.Content = "Perfil eliminado.";
+                LabelInfo.Text = "Perfil eliminado.";
             }
         }
 
@@ -330,13 +330,13 @@ namespace ImportadorFotos_Dinamico_WPF
             var dirI = new DirectoryInfo(dir);
             if (!dirI.Exists)
             {
-                LabelInfo.Content = $"El directorio {dir} no existe.";
+                LabelInfo.Text = $"El directorio {dir} no existe.";
                 return;
             }
 
             bool usarDateTaken = ChkUsarDateTaken.IsChecked.GetValueOrDefault();
-            string textoOriginal = Convert.ToString(LabelInfo.Content) ?? string.Empty;
-            LabelInfo.Content = "Leyendo ficheros del disco...";
+            string textoOriginal = Convert.ToString(LabelInfo.Text) ?? string.Empty;
+            LabelInfo.Text = "Leyendo ficheros del disco...";
 
             // Transferimos el escaneo del directorio a un hilo secundario
             var listaResultado = await Task.Run(() =>
@@ -371,7 +371,7 @@ namespace ImportadorFotos_Dinamico_WPF
             {
                 lvFiles.Items.Add(item);
             }
-            LabelInfo.Content = textoOriginal;
+            LabelInfo.Text = textoOriginal;
         }
 
         private async Task<(int fics, int dirs, int copiados)>
@@ -408,7 +408,7 @@ namespace ImportadorFotos_Dinamico_WPF
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        LabelInfo.Content = $"Procesando {fInfo.Name}";
+                        LabelInfo.Text = $"Procesando {fInfo.Name}";
                     });
 
                     DateTime fechaFic;
@@ -496,26 +496,26 @@ namespace ImportadorFotos_Dinamico_WPF
         {
             if (DpFechaFiltro.SelectedDate == null)
             {
-                LabelInfo.Content = "Por favor seleccione una fecha filtro válida.";
+                LabelInfo.Text = "Por favor seleccione una fecha filtro válida.";
                 return;
             }
             if (string.IsNullOrWhiteSpace(TxtDirDestino.Text))
             {
-                LabelInfo.Content = "Debe indicar el directorio de destino.";
+                LabelInfo.Text = "Debe indicar el directorio de destino.";
                 return;
             }
 
             var perfilActivo = CmbPerfiles.SelectedItem as PerfilOrigen;
             if (perfilActivo == null)
             {
-                LabelInfo.Content = "No hay ningún perfil seleccionado para copiar.";
+                LabelInfo.Text = "No hay ningún perfil seleccionado para copiar.";
                 return;
             }
 
             BtnCopiar.IsEnabled = false;
             DateTime fechaFiltro = DpFechaFiltro.SelectedDate.Value;
             LvDirectorios.Items.Clear();
-            LabelInfo.Content = "Iniciando proceso de copia...";
+            LabelInfo.Text = "Iniciando proceso de copia...";
 
             // Sincronizamos antes de operar
             SincronizarPerfilActivo();
@@ -529,7 +529,7 @@ namespace ImportadorFotos_Dinamico_WPF
                 ChkUsarSesion.IsChecked.GetValueOrDefault()
             );
 
-            LabelInfo.Content = $"Copia finalizada. Procesados: {res.fics}, Carpetas creadas: {res.dirs}, Ficheros copiados: {res.copiados}";
+            LabelInfo.Text = $"Copia finalizada. Procesados: {res.fics}, Carpetas creadas: {res.dirs}, Ficheros copiados: {res.copiados}";
             BtnCopiar.IsEnabled = true;
         }
 

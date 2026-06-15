@@ -160,16 +160,28 @@
         <!-- =================================================================== -->
         <!-- ROW 4: PIE DE VENTANA (ESTADO Y CRÉDITOS)                          -->
         <!-- =================================================================== -->
-        <StatusBar Grid.Row="4" Background="LightYellow" Padding="0,3,0,0">
-            <StatusBarItem HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
-                <Label x:Name="LabelInfo" Content="Inicializando aplicación..." 
-                       Foreground="#555555" Padding="3"/>
-            </StatusBarItem>
-            
-            <StatusBarItem HorizontalAlignment="Right" MinWidth="280" HorizontalContentAlignment="Stretch">
-                <Label x:Name="LabelCopyR" Content="copyright" 
-                       Foreground="#555555" Padding="3"/>
-            </StatusBarItem>
+        <StatusBar Grid.Row="4" Background="LightYellow" Padding="0,3">
+            <!-- El secreto está en usar un DockPanel con LastChildFill en True -->
+            <DockPanel LastChildFill="True" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=StatusBar}}">
+
+                <!-- 1. El Copyright lo declaramos PRIMERO y lo alineamos a la derecha -->
+                <TextBlock x:Name="LabelCopyR" 
+                   Text="copyright" 
+                   DockPanel.Dock="Right"
+                   Foreground="#555555" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Right" 
+                   Margin="10,0,15,0"/>
+
+                <!-- 2. El texto de información se queda con el espacio restante de la izquierda -->
+                <TextBlock x:Name="LabelInfo" 
+                   Text="Inicializando aplicación..." 
+                   Foreground="#555555" 
+                   VerticalAlignment="Center" 
+                   Margin="10,0,0,0"
+                   TextTrimming="CharacterEllipsis"/>
+
+            </DockPanel>
         </StatusBar>
     </Grid>
 </Window>
