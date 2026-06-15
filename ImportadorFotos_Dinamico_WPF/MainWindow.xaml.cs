@@ -236,6 +236,8 @@ namespace ImportadorFotos_Dinamico_WPF
             TxtPlantilla.Text = perfilActivo.Plantilla;
             ChkUsarSesion.IsChecked = perfilActivo.UsarSesion;
 
+            TxtTextoSesionGlobal.IsEnabled = perfilActivo.UsarSesion;
+
             LvFicheros.Items.Clear();
             LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado.";
         }
@@ -254,8 +256,10 @@ namespace ImportadorFotos_Dinamico_WPF
         private void TxtPerfilControl_LostFocus(object sender, RoutedEventArgs e)
         {
             if (_inicializando) return;
-            // Si el usuario cambia la plantilla o el check de sesión, lo salvamos en memoria al instante
             SincronizarPerfilActivo();
+
+            // Habilitamos o deshabilitamos según el estado del CheckBox actual
+            TxtTextoSesionGlobal.IsEnabled = ChkUsarSesion.IsChecked.GetValueOrDefault();
         }
 
         private void BtnNuevoPerfil_Click(object sender, RoutedEventArgs e)

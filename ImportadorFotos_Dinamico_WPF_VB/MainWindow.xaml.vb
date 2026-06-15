@@ -136,6 +136,8 @@ Public Class MainWindow
         TxtPlantilla.Text = perfilActivo.Plantilla
         ChkUsarSesion.IsChecked = perfilActivo.UsarSesion
 
+        TxtTextoSesionGlobal.IsEnabled = perfilActivo.UsarSesion
+
         LvFicheros.Items.Clear()
         LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado."
     End Sub
@@ -152,6 +154,9 @@ Public Class MainWindow
     Private Sub TxtPerfilControl_LostFocus(sender As Object, e As RoutedEventArgs)
         If _inicializando Then Exit Sub
         SincronizarPerfilActivo()
+
+        ' Habilitamos o deshabilitamos según el estado del CheckBox actual
+        TxtTextoSesionGlobal.IsEnabled = ChkUsarSesion.IsChecked.GetValueOrDefault()
     End Sub
 
     Private Sub BtnNuevoPerfil_Click(sender As Object, e As RoutedEventArgs)
