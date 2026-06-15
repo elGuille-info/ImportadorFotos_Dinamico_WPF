@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -107,6 +108,20 @@ namespace ImportadorFotos_Dinamico_WPF
             }
 
 
+            //string s = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            var ensamblado = typeof(MainWindow).Assembly;
+            var fvi = FileVersionInfo.GetVersionInfo(ensamblado.Location);
+                        
+            if (DateTime.Now.Year > 2020)
+            {
+                LabelCopyR.Content = "| © Guillermo (elGuille) Som, 2018-" + DateTime.Now.Year.ToString();
+            }
+            else
+            {
+                LabelCopyR.Content = "| © Guillermo (elGuille) Som, 2018-2026";
+            }
+            LabelCopyR.Content = LabelCopyR.Content.ToString() + $" - v{fvi.ProductMajorPart}.{fvi.ProductMinorPart}.{fvi.ProductPrivatePart}";
 
             // Inicializamos la cabecera del ListView según el CheckBox
             ActualizarCabeceraFecha();

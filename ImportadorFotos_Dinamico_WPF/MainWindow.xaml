@@ -104,10 +104,10 @@
                 <DatePicker x:Name="DpFechaFiltro" Grid.Row="0" Grid.Column="4" Height="24" VerticalAlignment="Center" Margin="5"/>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="5,5,5,0">
-                    <CheckBox x:Name="ChkReemplazar" Content="Reemplazar ficheros existentes" Margin="0,0,20,0"/>
-                    <CheckBox x:Name="ChkUsarDateTaken" Content="Usar fecha EXIF (Date Taken)" Margin="0,0,20,0" Checked="ChkUsarDateTaken_CheckedChanged" Unchecked="ChkUsarDateTaken_CheckedChanged"/>
-                    <Label Content="Texto Sesión:" Margin="0,0,5,0" Padding="0,3,0,0"/>
-                    <TextBox x:Name="TxtTextoSesionGlobal" Width="120" Height="22"/>
+                    <CheckBox x:Name="ChkReemplazar" Content="Reemplazar ficheros existentes" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                    <CheckBox x:Name="ChkUsarDateTaken" Content="Usar fecha EXIF (Date Taken)" Margin="0,0,20,0" Checked="ChkUsarDateTaken_CheckedChanged" Unchecked="ChkUsarDateTaken_CheckedChanged" VerticalAlignment="Center"/>
+                    <Label Content="Texto Sesión:" Margin="0,0,5,0" Padding="0,3,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="TxtTextoSesionGlobal" Width="120" Height="22" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="4" Margin="5,0,5,0">
                     <Label Content="Los ficheros RAW/DNG se copiarán en carpeta diferente." 
@@ -160,10 +160,14 @@
         <!-- =================================================================== -->
         <!-- ROW 4: PIE DE VENTANA (ESTADO Y CRÉDITOS)                          -->
         <!-- =================================================================== -->
-        <StatusBar Grid.Row="4" Background="Transparent" Padding="0,3,0,0">
-            <StatusBarItem HorizontalContentAlignment="Stretch">
+        <StatusBar Grid.Row="4" Background="LightYellow" Padding="0,3,0,0">
+            <StatusBarItem HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Label x:Name="LabelInfo" Content="Inicializando aplicación..." 
-                       Background="LightYellow"
+                       Foreground="#555555" Padding="3"/>
+            </StatusBarItem>
+            
+            <StatusBarItem HorizontalAlignment="Right" MinWidth="280" HorizontalContentAlignment="Stretch">
+                <Label x:Name="LabelCopyR" Content="copyright" 
                        Foreground="#555555" Padding="3"/>
             </StatusBarItem>
         </StatusBar>
