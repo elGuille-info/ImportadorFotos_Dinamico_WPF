@@ -1,4 +1,4 @@
-"# ImportadorFotos_Dinamico_WPF" 
+# ImportadorFotos_Dinamico_WPF
 
 <pre>
 // ============================================================================
