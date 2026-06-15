@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37328.6 d17.14
+VisualStudioVersion = 17.14.37328.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportadorFotos_Dinamico_WPF", "ImportadorFotos_Dinamico_WPF\ImportadorFotos_Dinamico_WPF.csproj", "{260C6341-85BC-4CC1-B263-F889A72ED797}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ImportadorFotos_Dinamico_WPF_VB", "ImportadorFotos_Dinamico_WPF_VB\ImportadorFotos_Dinamico_WPF_VB.vbproj", "{F3501F79-A050-4A2D-9B91-E4E651C4021E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{260C6341-85BC-4CC1-B263-F889A72ED797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{260C6341-85BC-4CC1-B263-F889A72ED797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{260C6341-85BC-4CC1-B263-F889A72ED797}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3501F79-A050-4A2D-9B91-E4E651C4021E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3501F79-A050-4A2D-9B91-E4E651C4021E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3501F79-A050-4A2D-9B91-E4E651C4021E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3501F79-A050-4A2D-9B91-E4E651C4021E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
