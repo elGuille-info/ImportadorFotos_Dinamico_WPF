@@ -7,7 +7,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
       <UseWPF>true</UseWPF>
       <!--<UseWindowsForms>true</UseWindowsForms>-->
-      <Version>3.0.0.0</Version>
+      <Version>3.1.0.0</Version>
+      <Title>ImportadorFotos Dinamico WPF C#</Title>
+      <Description>Importador de fotos dinámico WPF C# para .NET 9  (revisión del 18-jun-2026)</Description>
+      <Copyright>(c) Guillermo (elGuille) Som, 2018-2026</Copyright>
+      <PackageReadmeFile>Readme.md</PackageReadmeFile>
+      <RepositoryUrl>https://github.com/elGuille-info/ImportadorFotos-WPF</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
+      <AssemblyVersion>3.1.0.0</AssemblyVersion>
+      <FileVersion>3.1.0.0</FileVersion>
+      <ApplicationIcon>Resources\personalization.ico</ApplicationIcon>
+
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\personalization.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
+  </ItemGroup>
 
 </Project>

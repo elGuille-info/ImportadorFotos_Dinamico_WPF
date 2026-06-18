@@ -324,6 +324,44 @@ namespace ImportadorFotos_Dinamico_WPF
             LvFicheros.Items.Clear();
         }
 
+
+        // Para tener en cuenta cuando no se lee el EXIF correctamente
+        // 
+        // Si es jpg en la función lee los datos EXIF pero al devolverlo está vacío,
+        // así que usaremos el último exif leído a ver si es el mismo nombre
+
+        private BitmapMetadata? ultimoExif = null;
+        private string ultimoFicExif = "";
+
+        private DateTime FechaExif(FileInfo fi)
+        {
+            DateTime fechaFic;
+            var ficEXIF = InfoFoto(fi.FullName);
+            if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
+            {
+                fechaFic = fi.LastWriteTime;
+                if (ultimoExif != null && string.IsNullOrWhiteSpace(ultimoFicExif) == false)
+                {
+                    if (Path.GetFileNameWithoutExtension(fi.Name) == ultimoFicExif)
+                    {
+                        ficEXIF = ultimoExif;
+                        fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
+                    }
+                }
+                else
+                    fechaFic = fi.LastWriteTime;
+            }
+            else
+            {
+                // Asignamos el último exitoso
+                ultimoExif = ficEXIF;
+                ultimoFicExif = Path.GetFileNameWithoutExtension(fi.Name);
+                fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
+            }
+
+            return fechaFic;
+        }
+
         // ============================================================================
         // Proyecto: ImportadorFotos_Dinamico_WPF
         // Fichero: MainWindow.xaml.cs (BLOQUE 2 DE 2)
@@ -356,22 +394,32 @@ namespace ImportadorFotos_Dinamico_WPF
                 foreach (var fi in dirI.GetFiles())
                 {
                     DateTime fechaFic;
+                    //if (usarDateTaken)
+                    //{
+                    //    var ficEXIF = InfoFoto(fi.FullName);
+                    //    if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
+                    //    {
+                    //        fechaFic = fi.LastWriteTime;
+                    //    }
+                    //    else
+                    //    {
+                    //        fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    fechaFic = fi.LastWriteTime;
+                    //}
+
                     if (usarDateTaken)
                     {
-                        var ficEXIF = InfoFoto(fi.FullName);
-                        if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
-                        {
-                            fechaFic = fi.LastWriteTime;
-                        }
-                        else
-                        {
-                            fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
-                        }
+                        fechaFic = FechaExif(fi);
                     }
                     else
                     {
                         fechaFic = fi.LastWriteTime;
                     }
+
                     listaTemporal.Add(new ItemFic { Nombre = fi.Name, Fecha = fechaFic });
                 }
                 return listaTemporal;
@@ -386,7 +434,12 @@ namespace ImportadorFotos_Dinamico_WPF
         }
 
         private async Task<(int fics, int dirs, int copiados)>
-            CopiarFicherosAsync(DateTime fecha, ListView lv, string dir, string plantilla, bool usarSesionOrigen)
+            CopiarFicherosAsync(DateTime fecha, 
+                                ListView lv, 
+                                string dir, 
+                                string plantilla, 
+                                bool usarSesionOrigen, 
+                                bool usarDateTaken)
         {
             if (string.IsNullOrWhiteSpace(dir)) return (0, 0, 0);
 
@@ -423,14 +476,24 @@ namespace ImportadorFotos_Dinamico_WPF
                     });
 
                     DateTime fechaFic;
-                    var ficEXIF = InfoFoto(file);
-                    if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
+
+                    //var ficEXIF = InfoFoto(file);
+                    //if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
+                    //{
+                    //    fechaFic = fInfo.LastWriteTime;
+                    //}
+                    //else
+                    //{
+                    //    fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
+                    //}
+
+                    if (usarDateTaken)
                     {
-                        fechaFic = fInfo.LastWriteTime;
+                        fechaFic = FechaExif(fInfo);
                     }
                     else
                     {
-                        fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
+                        fechaFic = fInfo.LastWriteTime;
                     }
 
                     if (fechaFic >= fecha)
@@ -449,12 +512,26 @@ namespace ImportadorFotos_Dinamico_WPF
                         {
                             subCarpeta = Path.Combine(subCarpeta, textoSesionGlobal);
                         }
-
+                        //else
+                        //{
+                        //    subCarpeta = Path.Combine(subCarpeta, "sesion 1");
+                        //}
+                        
                         string dirDest = Path.Combine(dirDestBase, subCarpeta);
 
                         if (ExtensionesRAW.Contains(fInfo.Extension.ToUpper()))
                         {
-                            dirDest += " (RAW)";
+                            //// Si no se usa sesión hacerlo como subcarpeta
+                            //if (usarSesionOrigen) 
+                            //{
+                            //    dirDest += " (RAW)";
+                            //}
+                            //else 
+                            //{
+                            //    dirDest = Path.Combine(dirDest, "(RAW)");
+                            //}
+                            // Ponerlo siempre como subcarpeta en la carpeta de los JPG
+                            dirDest = Path.Combine(dirDest, "(RAW)");
                         }
 
                         var d = new DirectoryInfo(dirDest);
@@ -485,7 +562,7 @@ namespace ImportadorFotos_Dinamico_WPF
                             }
                             catch (Exception ex)
                             {
-                                System.Diagnostics.Debug.WriteLine(ex.Message);
+                                Debug.WriteLine(ex.Message);
                             }
                         }
                     }
@@ -537,7 +614,8 @@ namespace ImportadorFotos_Dinamico_WPF
                 LvFicheros,
                 TxtDirOrigen.Text,
                 TxtPlantilla.Text,
-                ChkUsarSesion.IsChecked.GetValueOrDefault()
+                ChkUsarSesion.IsChecked.GetValueOrDefault(),
+                ChkUsarDateTaken.IsChecked.GetValueOrDefault()
             );
 
             LabelInfo.Text = $"Copia finalizada. Procesados: {res.fics}, Carpetas creadas: {res.dirs}, Ficheros copiados: {res.copiados}";

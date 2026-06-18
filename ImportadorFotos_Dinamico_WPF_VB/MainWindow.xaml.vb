@@ -221,6 +221,38 @@ Public Class MainWindow
         LvFicheros.Items.Clear()
     End Sub
 
+    ' Para tener en cuenta cuando no se lee el EXIF correctamente
+    '
+    ' Si es jpg en la función lee los datos EXIF pero al devolverlo está vacío,
+    ' así que usaremos el último exif leído a ver si es el mismo nombre
+
+    Private ultimoExif As BitmapMetadata = Nothing
+    Private ultimoFicExif As String = ""
+
+    Private Function FechaExif(fi As FileInfo) As Date
+        Dim fechaFic As Date
+        Dim ficEXIF = InfoFoto(fi.FullName)
+        If ficEXIF Is Nothing OrElse String.IsNullOrEmpty(ficEXIF.DateTaken) Then
+            fechaFic = fi.LastWriteTime
+            If ultimoExif IsNot Nothing AndAlso String.IsNullOrWhiteSpace(ultimoFicExif) = False Then
+                If Path.GetFileNameWithoutExtension(fi.Name) = ultimoFicExif Then
+                    ficEXIF = ultimoExif
+                    fechaFic = Convert.ToDateTime(ficEXIF.DateTaken)
+                End If
+            Else
+                fechaFic = fi.LastWriteTime
+            End If
+        Else
+            ' Asignamos el último exitoso
+            ultimoExif = ficEXIF
+            ultimoFicExif = Path.GetFileNameWithoutExtension(fi.Name)
+            fechaFic = Convert.ToDateTime(ficEXIF.DateTaken)
+        End If
+
+        Return fechaFic
+    End Function
+
+
     ' ============================================================================
     ' Proyecto: ImportadorFotos_Dinamico_WPF_VB
     ' Fichero: MainWindow.xaml.vb (BLOQUE 2 DE 2)
@@ -247,16 +279,12 @@ Public Class MainWindow
         ' Transferimos el escaneo del directorio a un hilo secundario mediante Task.Run
         Dim listaResultado As List(Of ItemFic) = Await Task.Run(
             Function()
+
                 Dim listaTemporal As New List(Of ItemFic)()
                 For Each fi In dirI.GetFiles()
                     Dim fechaFic As Date
                     If usarDateTaken Then
-                        Dim ficEXIF = InfoFoto(fi.FullName)
-                        If ficEXIF Is Nothing OrElse String.IsNullOrEmpty(ficEXIF.DateTaken) Then
-                            fechaFic = fi.LastWriteTime
-                        Else
-                            fechaFic = Convert.ToDateTime(ficEXIF.DateTaken)
-                        End If
+                        fechaFic = FechaExif(fi)
                     Else
                         fechaFic = fi.LastWriteTime
                     End If
@@ -272,7 +300,13 @@ Public Class MainWindow
         LabelInfo.Text = textoOriginal
     End Sub
 
-    Private Async Function CopiarFicherosAsync(fecha As Date, lv As ListView, dir As String, plantilla As String, usarSesionOrigen As Boolean) As Task(Of (fics As Integer, dirs As Integer, copiados As Integer))
+
+    Private Async Function CopiarFicherosAsync(fecha As Date,
+                                               lv As ListView,
+                                               dir As String,
+                                               plantilla As String,
+                                               usarSesionOrigen As Boolean,
+                                               usarDateTaken As Boolean) As Task(Of (fics As Integer, dirs As Integer, copiados As Integer))
         If String.IsNullOrWhiteSpace(dir) Then Return (0, 0, 0)
 
         Dim reemplazar As Boolean = ChkReemplazar.IsChecked.GetValueOrDefault()
@@ -310,12 +344,18 @@ Public Class MainWindow
                         End Sub)
 
                     Dim fechaFic As Date
-                    Dim ficEXIF = InfoFoto(file)
-                    If ficEXIF Is Nothing OrElse String.IsNullOrEmpty(ficEXIF.DateTaken) Then
-                        fechaFic = fInfo.LastWriteTime
+                    If usarDateTaken Then
+                        fechaFic = FechaExif(fInfo)
                     Else
-                        fechaFic = Convert.ToDateTime(ficEXIF.DateTaken)
+                        fechaFic = fInfo.LastWriteTime
                     End If
+
+                    'Dim ficEXIF = InfoFoto(file)
+                    'If ficEXIF Is Nothing OrElse String.IsNullOrEmpty(ficEXIF.DateTaken) Then
+                    '    fechaFic = fInfo.LastWriteTime
+                    'Else
+                    '    fechaFic = Convert.ToDateTime(ficEXIF.DateTaken)
+                    'End If
 
                     If fechaFic >= fecha Then
                         n += 1
@@ -330,13 +370,21 @@ Public Class MainWindow
                         ' Si el origen tiene habilitada su casilla de sesión, inyectamos el texto global
                         If usarSesionOrigen AndAlso Not String.IsNullOrWhiteSpace(textoSesionGlobal) Then
                             subCarpeta = Path.Combine(subCarpeta, textoSesionGlobal)
+                            'subCarpeta = String.Concat(subCarpeta, textoSesionGlobal)
                         End If
 
                         Dim dirDest As String = Path.Combine(dirDestBase, subCarpeta)
 
                         ' El programa aísla los formatos RAW de forma automática según la etiqueta informativa
                         If ExtensionesRAW.Contains(fInfo.Extension.ToUpper()) Then
-                            dirDest &= " (RAW)"
+                            '' Si no se usa sesión hacerlo como subcarpeta
+                            'If usarSesionOrigen Then
+                            '    dirDest &= " (RAW)"
+                            'Else
+                            '    dirDest = Path.Combine(dirDest, "(RAW)")
+                            'End If
+                            ' Ponerlo siempre como subcarpeta en la carpeta de los JPG
+                            dirDest = Path.Combine(dirDest, "(RAW)")
                         End If
 
                         Dim d As New DirectoryInfo(dirDest)
@@ -411,7 +459,8 @@ Public Class MainWindow
             LvFicheros,
             TxtDirOrigen.Text,
             TxtPlantilla.Text,
-            ChkUsarSesion.IsChecked.GetValueOrDefault()
+            ChkUsarSesion.IsChecked.GetValueOrDefault(),
+            ChkUsarDateTaken.IsChecked.GetValueOrDefault()
         )
 
         LabelInfo.Text = $"Copia finalizada. Procesados: {res.fics}, Carpetas creadas: {res.dirs}, Ficheros copiados: {res.copiados}"
@@ -459,6 +508,7 @@ Public Class MainWindow
         End If
 
     End Sub
+
     ' Extracción limpia de metadatos mediante objetos gráficos nativos de WPF
     Private Function InfoFoto(sImg As String) As BitmapMetadata
         Try
@@ -471,10 +521,12 @@ Public Class MainWindow
         End Try
     End Function
 End Class ' <-- Cierre de la clase principal' --- CLASES DE MODELO EN MEMORIA PARA ENLACE DE DATOS (BINDING) ---
+
 Public Class ItemFic
     Public Property Nombre As String = String.Empty
     Public Property Fecha As Date
 End Class
+
 Public Class ItemDir
     Public Property Nombre As String = String.Empty
 End Class
