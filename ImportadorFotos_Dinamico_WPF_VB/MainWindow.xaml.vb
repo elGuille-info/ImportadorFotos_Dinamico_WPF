@@ -83,9 +83,6 @@ Public Class MainWindow
 
         ActualizarCabeceraFecha()
 
-        'LabelInfo.Text = "© Guillermo (elGuille) Som, 2018-" & Date.Now.Year.ToString() & " - v3.0"
-        'LabelCopyR.Text = LabelInfo.Text
-
         ' Leemos la versión de 4 dígitos directamente de la memoria del ensamblado en VB
         Dim version As Version = GetType(MainWindow).Assembly.GetName().Version
         Dim strVersion As String = "3.0.0.0"
@@ -350,13 +347,6 @@ Public Class MainWindow
                         fechaFic = fInfo.LastWriteTime
                     End If
 
-                    'Dim ficEXIF = InfoFoto(file)
-                    'If ficEXIF Is Nothing OrElse String.IsNullOrEmpty(ficEXIF.DateTaken) Then
-                    '    fechaFic = fInfo.LastWriteTime
-                    'Else
-                    '    fechaFic = Convert.ToDateTime(ficEXIF.DateTaken)
-                    'End If
-
                     If fechaFic >= fecha Then
                         n += 1
                         Dim textoMes As String = fechaFic.ToString("MM")
@@ -370,19 +360,12 @@ Public Class MainWindow
                         ' Si el origen tiene habilitada su casilla de sesión, inyectamos el texto global
                         If usarSesionOrigen AndAlso Not String.IsNullOrWhiteSpace(textoSesionGlobal) Then
                             subCarpeta = Path.Combine(subCarpeta, textoSesionGlobal)
-                            'subCarpeta = String.Concat(subCarpeta, textoSesionGlobal)
                         End If
 
                         Dim dirDest As String = Path.Combine(dirDestBase, subCarpeta)
 
                         ' El programa aísla los formatos RAW de forma automática según la etiqueta informativa
                         If ExtensionesRAW.Contains(fInfo.Extension.ToUpper()) Then
-                            '' Si no se usa sesión hacerlo como subcarpeta
-                            'If usarSesionOrigen Then
-                            '    dirDest &= " (RAW)"
-                            'Else
-                            '    dirDest = Path.Combine(dirDest, "(RAW)")
-                            'End If
                             ' Ponerlo siempre como subcarpeta en la carpeta de los JPG
                             dirDest = Path.Combine(dirDest, "(RAW)")
                         End If
@@ -411,8 +394,6 @@ Public Class MainWindow
                                 copiadosCount += 1
                             Catch ex As Exception
                                 Debug.WriteLine(ex.Message)
-                                ' 'Debug' is not a member of 'System.Windows.Diagnostics'.
-                                'Diagnostics.Debug.WriteLine(ex.Message)
                             End Try
                         End If
                     End If

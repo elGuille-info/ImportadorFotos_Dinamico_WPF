@@ -1,6 +1,6 @@
 ﻿// ============================================================================
 // Proyecto: ImportadorFotos_Dinamico_WPF
-// Fichero: ConfiguracionModel.cs
+// Fichero: ConfiguracionApp.cs
 // Autor original: El Guille (elguillemola.com)
 // Diseño de arquitectura JSON: Gemini (La IA de Google)
 // Fecha: Junio de 2026

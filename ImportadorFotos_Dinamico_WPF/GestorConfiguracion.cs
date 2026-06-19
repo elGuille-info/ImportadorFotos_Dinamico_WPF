@@ -52,19 +52,6 @@ namespace ImportadorFotos_Dinamico_WPF
                 return new ConfiguracionApp();
             }
 
-            //if (!File.Exists(RutaArchivo))
-            //{
-            //    // Devolvemos una instancia nueva con un perfil inicial de demostración
-            //    var nuevaConfig = new ConfiguracionApp();
-            //    nuevaConfig.PerfilesOrigen.Add(new PerfilOrigen
-            //    {
-            //        Id = "Origen Inicial (Ejemplo)",
-            //        Ruta = @"C:\FotosOrigen",
-            //        Plantilla = "$MM $dd 1"
-            //    });
-            //    return nuevaConfig;
-            //}
-
             try
             {
                 string jsonString = await File.ReadAllTextAsync(RutaArchivo);

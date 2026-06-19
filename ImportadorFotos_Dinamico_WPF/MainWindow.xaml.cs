@@ -78,16 +78,6 @@ namespace ImportadorFotos_Dinamico_WPF
             ChkUsarDateTaken.IsChecked = _config.UsarDateTaken;
             DpFechaFiltro.SelectedDate = _config.FechaFiltro ?? DateTime.Today;
 
-            //ChkCopiarDNGSeparado.IsChecked = _config.CopiarRAWSeparado;
-
-            //_inicializando = false;
-
-            //// Forzamos la selección del primer perfil disponible
-            //if (CmbPerfiles.Items.Count > 0)
-            //{
-            //    CmbPerfiles.SelectedIndex = 0;
-            //}
-
             _inicializando = false;
 
             // Buscamos si existe el perfil guardado como último activo
@@ -106,22 +96,6 @@ namespace ImportadorFotos_Dinamico_WPF
                     CmbPerfiles.SelectedIndex = 0;
                 }
             }
-
-
-            //string s = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-            //var ensamblado = typeof(MainWindow).Assembly;
-            //var fvi = FileVersionInfo.GetVersionInfo(ensamblado.Location);
-
-            //if (DateTime.Now.Year > 2020)
-            //{
-            //    LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-" + DateTime.Now.Year.ToString();
-            //}
-            //else
-            //{
-            //    LabelCopyR.Text = "| © Guillermo (elGuille) Som, 2018-2026";
-            //}
-            //LabelCopyR.Text = LabelCopyR.Text + $" - v{fvi.ProductMajorPart}.{fvi.ProductMinorPart}.{fvi.ProductPrivatePart}";
 
             // Leemos la versión de 4 dígitos directamente de la memoria del ensamblado
             var version = typeof(MainWindow).Assembly.GetName().Version;
@@ -166,53 +140,6 @@ namespace ImportadorFotos_Dinamico_WPF
             CmbPerfiles.ItemsSource = null;
             CmbPerfiles.ItemsSource = _config.PerfilesOrigen;
         }
-
-        //private void CmbPerfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (_inicializando) return;
-
-        //    // Si el cambio de selección viene de eliminar un perfil, salimos
-        //    if (CmbPerfiles.SelectedItem == null) return;
-
-        //    // Antes de cambiar de perfil, guardamos lo que el usuario escribió en el anterior
-        //    SincronizarPerfilActivo();
-
-        //    // Cargamos en los controles los datos del nuevo perfil seleccionado
-        //    var perfilActivo = (PerfilOrigen)CmbPerfiles.SelectedItem;
-        //    TxtDirOrigen.Text = perfilActivo.Ruta;
-        //    TxtPlantilla.Text = perfilActivo.Plantilla;
-        //    ChkUsarSesion.IsChecked = perfilActivo.UsarSesion;
-
-        //    LvFicheros.Items.Clear();
-        //    LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado.";
-        //}
-
-        //private void CmbPerfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (_inicializando) return;
-
-        //    // --- CORRECCIÓN DE PERSISTENCIA ---
-        //    // Si cambiamos de perfil, guardamos lo que había en la pantalla en el perfil ANTERIOR
-        //    // antes de machacar los TextBox con los datos del nuevo perfil
-        //    if (e.RemovedItems.Count > 0 && e.RemovedItems[0] is PerfilOrigen perfilViejo)
-        //    {
-        //        perfilViejo.Ruta = TxtDirOrigen.Text;
-        //        perfilViejo.Plantilla = TxtPlantilla.Text;
-        //        perfilViejo.UsarSesion = ChkUsarSesion.IsChecked.GetValueOrDefault();
-        //    }
-        //    // ----------------------------------
-
-        //    if (CmbPerfiles.SelectedItem == null) return;
-
-        //    // Cargamos en los controles los datos del nuevo perfil seleccionado
-        //    var perfilActivo = (PerfilOrigen)CmbPerfiles.SelectedItem;
-        //    TxtDirOrigen.Text = perfilActivo.Ruta;
-        //    TxtPlantilla.Text = perfilActivo.Plantilla;
-        //    ChkUsarSesion.IsChecked = perfilActivo.UsarSesion;
-
-        //    LvFicheros.Items.Clear();
-        //    LabelInfo.Text = $"Perfil '{perfilActivo.Id}' cargado.";
-        //}
 
         private void CmbPerfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -324,7 +251,6 @@ namespace ImportadorFotos_Dinamico_WPF
             LvFicheros.Items.Clear();
         }
 
-
         // Para tener en cuenta cuando no se lee el EXIF correctamente
         // 
         // Si es jpg en la función lee los datos EXIF pero al devolverlo está vacío,
@@ -394,22 +320,6 @@ namespace ImportadorFotos_Dinamico_WPF
                 foreach (var fi in dirI.GetFiles())
                 {
                     DateTime fechaFic;
-                    //if (usarDateTaken)
-                    //{
-                    //    var ficEXIF = InfoFoto(fi.FullName);
-                    //    if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
-                    //    {
-                    //        fechaFic = fi.LastWriteTime;
-                    //    }
-                    //    else
-                    //    {
-                    //        fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    fechaFic = fi.LastWriteTime;
-                    //}
 
                     if (usarDateTaken)
                     {
@@ -477,16 +387,6 @@ namespace ImportadorFotos_Dinamico_WPF
 
                     DateTime fechaFic;
 
-                    //var ficEXIF = InfoFoto(file);
-                    //if (ficEXIF == null || string.IsNullOrEmpty(ficEXIF.DateTaken))
-                    //{
-                    //    fechaFic = fInfo.LastWriteTime;
-                    //}
-                    //else
-                    //{
-                    //    fechaFic = Convert.ToDateTime(ficEXIF.DateTaken);
-                    //}
-
                     if (usarDateTaken)
                     {
                         fechaFic = FechaExif(fInfo);
@@ -512,24 +412,11 @@ namespace ImportadorFotos_Dinamico_WPF
                         {
                             subCarpeta = Path.Combine(subCarpeta, textoSesionGlobal);
                         }
-                        //else
-                        //{
-                        //    subCarpeta = Path.Combine(subCarpeta, "sesion 1");
-                        //}
                         
                         string dirDest = Path.Combine(dirDestBase, subCarpeta);
 
                         if (ExtensionesRAW.Contains(fInfo.Extension.ToUpper()))
                         {
-                            //// Si no se usa sesión hacerlo como subcarpeta
-                            //if (usarSesionOrigen) 
-                            //{
-                            //    dirDest += " (RAW)";
-                            //}
-                            //else 
-                            //{
-                            //    dirDest = Path.Combine(dirDest, "(RAW)");
-                            //}
                             // Ponerlo siempre como subcarpeta en la carpeta de los JPG
                             dirDest = Path.Combine(dirDest, "(RAW)");
                         }
@@ -622,28 +509,6 @@ namespace ImportadorFotos_Dinamico_WPF
             BtnCopiar.IsEnabled = true;
         }
 
-        // Centraliza la selección de carpetas en disco para Origen y Destino
-        //private void BtnSelDir_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var btn = sender as Button;
-        //    if (btn == null) return;
-
-        //    TextBox txtTarget = (btn == BtnSelOrigen) ? TxtDirOrigen : TxtDirDestino;
-
-        //    using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
-        //    {
-        //        dialog.Description = "Selecciona el directorio correspondiente";
-        //        dialog.SelectedPath = txtTarget.Text;
-        //        dialog.RootFolder = Environment.SpecialFolder.MyComputer;
-
-        //        if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        //        {
-        //            txtTarget.Text = dialog.SelectedPath;
-        //            if (btn == BtnSelOrigen) SincronizarPerfilActivo();
-        //        }
-        //    }
-        //}
-
         private void BtnSelDir_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -674,16 +539,6 @@ namespace ImportadorFotos_Dinamico_WPF
                 Llenar(LvFicheros, TxtDirOrigen.Text);
             }
         }
-        // Actualiza textualmente el encabezado de la columna de fecha en el GridView
-        //private void ActualizarCabeceraFecha()
-        //{
-        //    var gridView = LvFicheros.View as GridView;
-        //    if (gridView != null && gridView.Columns.Count > 1)
-        //    {
-        //        bool usarDateTaken = ChkUsarDateTaken.IsChecked.GetValueOrDefault();
-        //        gridView.Columns[1].Header = usarDateTaken ? "Date Taken" : "Fecha Modificación";
-        //    }
-        //}
 
         private void ActualizarCabeceraFecha()
         {
