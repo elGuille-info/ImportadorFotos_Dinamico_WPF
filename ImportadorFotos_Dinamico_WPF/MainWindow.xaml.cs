@@ -101,7 +101,8 @@ namespace ImportadorFotos_Dinamico_WPF
             var version = typeof(MainWindow).Assembly.GetName().Version;
             string strVersion = version != null ? $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}" : "3.0.0.0";
 
-            string textoCopyright = $"| © Guillermo (elGuille) Som, 2018-{DateTime.Now.Year}";
+            //string textoCopyright = $"| © Guillermo (elGuille) Som, 2018-{DateTime.Now.Year}";
+            string textoCopyright = $" © Guillermo (elGuille) Som, 2018-{DateTime.Now.Year}";
             LabelCopyR.Text = $"{textoCopyright} - v{strVersion}";
 
             // Inicializamos la cabecera del ListView según el CheckBox
@@ -310,7 +311,7 @@ namespace ImportadorFotos_Dinamico_WPF
             }
 
             bool usarDateTaken = ChkUsarDateTaken.IsChecked.GetValueOrDefault();
-            string textoOriginal = Convert.ToString(LabelInfo.Text) ?? string.Empty;
+            //string textoOriginal = Convert.ToString(LabelInfo.Text) ?? string.Empty;
             LabelInfo.Text = "Leyendo ficheros del disco...";
 
             // Transferimos el escaneo del directorio a un hilo secundario
@@ -340,7 +341,8 @@ namespace ImportadorFotos_Dinamico_WPF
             {
                 lvFiles.Items.Add(item);
             }
-            LabelInfo.Text = textoOriginal;
+            //LabelInfo.Text = textoOriginal;
+            LabelInfo.Text = $"Hay {listaResultado.Count} {listaResultado.Count.Plural("fichero")}.";
         }
 
         private async Task<(int fics, int dirs, int copiados)>

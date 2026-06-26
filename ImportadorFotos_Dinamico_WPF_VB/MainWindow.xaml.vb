@@ -270,7 +270,7 @@ Public Class MainWindow
         End If
 
         Dim usarDateTaken As Boolean = ChkUsarDateTaken.IsChecked.GetValueOrDefault()
-        Dim textoOriginal As String = Convert.ToString(LabelInfo.Text)
+        'Dim textoOriginal As String = Convert.ToString(LabelInfo.Text)
         LabelInfo.Text = "Leyendo ficheros del disco..."
 
         ' Transferimos el escaneo del directorio a un hilo secundario mediante Task.Run
@@ -294,7 +294,8 @@ Public Class MainWindow
         For Each item In listaResultado
             lvFiles.Items.Add(item)
         Next
-        LabelInfo.Text = textoOriginal
+        'LabelInfo.Text = textoOriginal
+        LabelInfo.Text = $"Hay {listaResultado.Count} {listaResultado.Count.Plural("fichero")}."
     End Sub
 
 
