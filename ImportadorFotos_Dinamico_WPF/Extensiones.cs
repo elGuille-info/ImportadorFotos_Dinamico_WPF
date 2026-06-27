@@ -1,50 +1,123 @@
-﻿//
-// Clase para las extensiones                                   (26/jun/26 02.45)
-//
-// Convertida de VB a C# con Code Converter (VB - C#) v10.0.1.0
-//
-
-using System;
+﻿using System;
+using System.Globalization;
+using System.Text;
 
 namespace ImportadorFotos_Dinamico_WPF
 {
-    static public class Extensiones
+    /// <summary>
+    /// Métodos de extensión auxiliares con pluralización mejorada para español.
+    /// Reglas implementadas (versión simplificada):
+    /// - Si termina en vocal -> añadir "s".
+    /// - Si termina en consonante distinta de 'z' -> añadir "es".
+    /// - Si termina en 'z' -> cambiar 'z' por 'c' y añadir "es".
+    /// - Si ya termina en 's' (insensible a mayúsculas) -> se considera ya plural/invariable y no se modifica.
+    /// Nota: la normalización de tildes (por ejemplo, balón -> balones) se maneja al detectar la letra base
+    /// (sin diacríticos) para elegir la regla, pero no se intenta reasignar tildes automáticamente en todos los casos.
+    /// </summary>
+    public static class Extensiones
     {
-
-        // Versión simple para pluralizar                            (26/jun/26 02.58)
-
         /// <summary>
-        /// Devuelve el plural del texto indicado, según el valor sea distinto de 1.
+        /// Devuelve el plural de la palabra <paramref name="singular"/> según el valor <paramref name="count"/>.
+        /// Si <paramref name="count"/> != 1, se aplican reglas simplificadas de pluralización en español.
+        /// Retorna null si la entrada es null.
         /// </summary>
-        /// <param name="n">El valor a tener en cuenta (será plural si es distinto de 1).</param>
-        /// <param name="singular">La palabra a pluralizar.</param>
-        /// <returns>La cadena pluralizada o la indicada si no es plural.</returns>
-        /// <remarks>Si la palabra en singular es en mayúsculas se devuelve en mayúsculas.</remarks>
-        public static string Plural(this string singular, int n)
+        /// <param name="singular">Palabra en singular.</param>
+        /// <param name="count">Cantidad que determina si debe usarse plural.</param>
+        /// <returns>La palabra pluralizada o la original.</returns>
+        public static string Plural(this string singular, int count)
         {
-            return n.Plural(singular);
+            if (singular is null) return null;
+            if (singular.Length == 0) return singular;
+
+            var culture = CultureInfo.CurrentCulture;
+
+            // Detectar si la entrada es todo en mayúsculas (para preservar el estilo)
+            bool wasAllUpper = string.Equals(singular, singular.ToUpper(culture), StringComparison.Ordinal);
+
+            // Trabajamos con la palabra recortada en los extremos para aplicar las reglas
+            string trimmed = singular.Trim();
+            if (trimmed.Length == 0) return singular; // solo espacios
+
+            // Si no hay que pluralizar, devolvemos la original tal cual (manteniendo espacios, si se desean preservar)
+            if (count == 1) return singular;
+
+            // Si ya termina en 's' (insensible a mayúsc/minúsc) consideramos que no añadir sufijo
+            if (trimmed.EndsWith("s", true, culture))
+            {
+                return wasAllUpper ? singular.ToUpper(culture) : singular;
+            }
+
+            // Para decidir la regla analizamos la letra base (sin diacríticos) del último carácter
+            char lastBase = GetLastBaseLetter(trimmed, culture);
+
+            string resultBody;
+
+            if (lastBase == 'z')
+            {
+                // sustituir z/Z por c/C y añadir "es"
+                char lastOrig = trimmed[trimmed.Length - 1];
+                bool lastIsUpper = char.IsUpper(lastOrig);
+                char replacement = lastIsUpper ? 'C' : 'c';
+                resultBody = trimmed.Substring(0, trimmed.Length - 1) + replacement + "es";
+            }
+            else if (IsVowel(lastBase))
+            {
+                // termina en vocal -> añadir 's'
+                resultBody = trimmed + "s";
+            }
+            else
+            {
+                // consonante distinta de z -> añadir 'es'
+                resultBody = trimmed + "es";
+            }
+
+            // Preservar mayúsculas totales si correspondía
+            if (wasAllUpper)
+            {
+                resultBody = resultBody.ToUpper(culture);
+            }
+
+            // Devolvemos el resultado limpio (sin preservar espacios externos)
+            return resultBody;
         }
 
         /// <summary>
-        /// Devuelve el plural del texto indicado, según el valor sea distinto de 1.
+        /// Sobrecarga para permitir la llamada desde int:  n.Plural("item")
         /// </summary>
-        /// <param name="n">El valor a tener en cuenta (será plural si es distinto de 1).</param>
-        /// <param name="singular">La palabra a pluralizar.</param>
-        /// <returns>La cadena pluralizada o la indicada si no es plural.</returns>
-        /// <remarks>Si la palabra en singular es en mayúsculas se devuelve en mayúsculas.</remarks>
-        public static string Plural(this int n, string singular)
+        public static string Plural(this int count, string singular)
         {
-            bool mayusculas = (singular == singular.ToUpper());
+            return singular.Plural(count);
+        }
 
-            if (n != 1)
+        // ---------- Helpers ----------
+
+        // Devuelve la última letra base de la cadena (sin diacríticos), en minúscula cultural.
+        private static char GetLastBaseLetter(string s, CultureInfo culture)
+        {
+            if (string.IsNullOrEmpty(s)) return '\0';
+            // Tomamos el último carácter visible
+            char last = s[s.Length - 1];
+
+            // Convertir el carácter a su forma sin diacríticos mediante normalización
+            string lastStr = last.ToString();
+            string decomp = lastStr.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+            foreach (char ch in decomp)
             {
-                singular += "s";
+                var cat = CharUnicodeInfo.GetUnicodeCategory(ch);
+                if (cat != System.Globalization.UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(ch);
+                }
             }
-            if (mayusculas)
-            {
-                return singular.ToUpper();
-            }
-            return singular;
+            string recomposed = sb.ToString().Normalize(NormalizationForm.FormC);
+            if (recomposed.Length == 0) return char.ToLowerInvariant(last);
+            return char.ToLower(recomposed[recomposed.Length - 1], culture);
+        }
+
+        private static bool IsVowel(char c)
+        {
+            return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
         }
     }
 }
