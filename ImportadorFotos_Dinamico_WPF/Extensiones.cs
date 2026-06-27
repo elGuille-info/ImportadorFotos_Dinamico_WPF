@@ -34,7 +34,7 @@ namespace ImportadorFotos_Dinamico_WPF
         /// <remarks>Si la palabra en singular es en mayúsculas se devuelve en mayúsculas.</remarks>
         public static string Plural(this int n, string singular)
         {
-            bool mayusculas = singular == singular.ToUpper();
+            bool mayusculas = (singular == singular.ToUpper());
 
             if (n != 1)
             {
