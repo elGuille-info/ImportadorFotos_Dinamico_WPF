@@ -1,4 +1,12 @@
-﻿using System;
+﻿//
+// Clase para las extensiones                                   (26/jun/26 02.45)
+//
+// Convertida de VB a C# con Code Converter (VB - C#) v10.0.1.0
+//
+
+// Nota: los comentarios anteriores, los eliminó el "copilot" al mejorar el código de la clase.
+
+using System;
 using System.Globalization;
 using System.Text;
 
