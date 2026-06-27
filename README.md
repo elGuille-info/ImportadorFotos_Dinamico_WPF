@@ -1,7 +1,7 @@
 # ImportadorFotos_Dinamico_WPF
 
 
-Importador de fotos dinámico WPF C# y VB para .NET 9  (revisión del 26-jun-2026)
+Importador de fotos dinámico WPF C# y VB para .NET 9  (revisión del 27-jun-2026)
 
 Basado en el proyecto Copiar archivos de 2 unidades.
 

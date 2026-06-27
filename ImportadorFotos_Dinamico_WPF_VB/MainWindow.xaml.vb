@@ -85,11 +85,13 @@ Public Class MainWindow
 
         ' Leemos la versión de 4 dígitos directamente de la memoria del ensamblado en VB
         Dim version As Version = GetType(MainWindow).Assembly.GetName().Version
-        Dim strVersion As String = "3.0.0.0"
+        Dim strVersion As String = "3.3.0.0"
 
         If version IsNot Nothing Then
             strVersion = $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}"
         End If
+
+        Title = $"Importador Fotos Dinámico WPF VB - v{strVersion.Substring(0, 5)} (VB.NET / .NET 9.0)"
 
         Dim textoCopyright As String = $"| © Guillermo (elGuille) Som, 2018-{Date.Now.Year}"
         LabelCopyR.Text = $"{textoCopyright} - v{strVersion}"

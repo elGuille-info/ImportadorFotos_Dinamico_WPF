@@ -6,16 +6,16 @@
     <RootNamespace>ImportadorFotos_Dinamico_WPF_VB</RootNamespace>
     <UseWPF>true</UseWPF>
       <!--<UseWindowsForms>true</UseWindowsForms>-->
-      <Version>3.3.0.0</Version>
+      <Version>3.3.5.0</Version>
       <OptionStrict>On</OptionStrict>
       <Title>ImportadorFotos Dinamico WPF VB</Title>
-      <Description>Importador de fotos dinámico WPF VB para .NET 9  (revisión del 26-jun-2026)</Description>
+      <Description>Importador de fotos dinámico WPF VB para .NET 9  (revisión del 27-jun-2026)</Description>
       <Copyright>(c) Guillermo (elGuille) Som, 2018-2026</Copyright>
       <PackageReadmeFile>Readme.md</PackageReadmeFile>
       <RepositoryUrl>https://github.com/elGuille-info/ImportadorFotos-WPF</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
-      <AssemblyVersion>3.3.0.0</AssemblyVersion>
-      <FileVersion>3.3.0.0</FileVersion>
+      <AssemblyVersion>3.3.5.0</AssemblyVersion>
+      <FileVersion>3.3.5.0</FileVersion>
       <ApplicationIcon>Resources\personalization.ico</ApplicationIcon>
   </PropertyGroup>
 

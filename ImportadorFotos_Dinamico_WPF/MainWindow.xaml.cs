@@ -99,7 +99,9 @@ namespace ImportadorFotos_Dinamico_WPF
 
             // Leemos la versión de 4 dígitos directamente de la memoria del ensamblado
             var version = typeof(MainWindow).Assembly.GetName().Version;
-            string strVersion = version != null ? $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}" : "3.0.0.0";
+            string strVersion = version != null ? $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}" : "3.3.0.0";
+
+            Title = $"Importador Fotos Dinámico WPF - v{strVersion.Substring(0, 5)}  (C# / .NET 9.0)";
 
             //string textoCopyright = $"| © Guillermo (elGuille) Som, 2018-{DateTime.Now.Year}";
             string textoCopyright = $" © Guillermo (elGuille) Som, 2018-{DateTime.Now.Year}";
