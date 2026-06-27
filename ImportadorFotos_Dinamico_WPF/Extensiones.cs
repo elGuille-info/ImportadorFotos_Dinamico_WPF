@@ -26,7 +26,8 @@ namespace ImportadorFotos_Dinamico_WPF
         /// <returns>La palabra pluralizada o la original.</returns>
         public static string Plural(this string singular, int count)
         {
-            if (singular is null) return null;
+            //if (singular is null) return null;
+            if (string.IsNullOrWhiteSpace(singular)) return singular; // null o solo espacios
             if (singular.Length == 0) return singular;
 
             var culture = CultureInfo.CurrentCulture;
