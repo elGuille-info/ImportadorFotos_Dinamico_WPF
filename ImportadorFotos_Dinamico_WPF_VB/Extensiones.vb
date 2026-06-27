@@ -1,6 +1,8 @@
 ﻿'
 ' Módulo para las extensiones                                   (26/jun/26 02.45)
 '
+' Versión simple para pluralizar                                (26/jun/26 02.58)
+'
 '
 
 Imports System
